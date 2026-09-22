@@ -43,12 +43,39 @@
 
   .wrap { max-width:1240px; margin:0 auto; padding:24px 24px 80px; }
 
+  /* ---------- Smart Fill panel ---------- */
+  .context-panel { background:var(--panel); border:1px solid var(--line); border-radius:6px; margin-bottom:20px; overflow:hidden; }
+  .context-head { display:flex; align-items:center; gap:10px; padding:13px 16px; cursor:pointer; user-select:none; }
+  .context-head .title { font-weight:600; font-size:14px; }
+  .context-head .badge { font-size:11px; color:var(--gold); border:1px solid var(--gold); border-radius:999px; padding:2px 8px; }
+  .context-head .hint { color:var(--text-soft); font-size:12px; margin-left:auto; }
+  .context-head .caret { color:var(--gold); font-size:12px; transition:transform .18s ease; }
+  .context-panel.open .caret { transform:rotate(90deg); }
+  .context-body { display:none; padding:4px 16px 16px; }
+  .context-panel.open .context-body { display:block; }
+  .context-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(160px,1fr)); gap:10px; margin-bottom:10px; }
+  .context-field label { display:block; font-size:11px; color:var(--text-soft); margin-bottom:4px; }
+  .context-field input { width:100%; padding:8px 10px; border:1px solid var(--line); border-radius:var(--radius); background:var(--panel-raised); color:var(--text); font-size:13.5px; font-family:inherit; }
+  .context-field input:focus { outline:none; border-color:var(--gold); }
+  .context-more-toggle { background:none; border:none; color:var(--gold); font-size:12.5px; cursor:pointer; padding:4px 0; font-family:inherit; }
+  .context-more { display:none; }
+  .context-more.show { display:block; }
+  .context-actions { display:flex; gap:8px; margin-top:10px; }
+
   .channel-tabs { display:flex; gap:8px; margin-bottom:20px; border-bottom:1px solid var(--line); }
   .channel-tab { background:transparent; border:none; padding:12px 4px; margin-right:22px; font-size:15px; font-weight:600; color:var(--text-soft); cursor:pointer; border-bottom:2px solid transparent; font-family:inherit; }
   .channel-tab.active { color:var(--text); border-bottom-color:var(--gold); }
   .channel-tab .dot { display:inline-block; width:7px; height:7px; border-radius:50%; margin-right:7px; vertical-align:middle; }
   .channel-tab[data-ch="email"] .dot { background:var(--gold); }
   .channel-tab[data-ch="whatsapp"] .dot { background:var(--wa); }
+
+  /* ---------- Quick strips ---------- */
+  .quick-strip { margin-bottom:16px; }
+  .quick-strip .strip-label { font-size:11.5px; color:var(--text-soft); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:7px; }
+  .chip-row { display:flex; gap:8px; flex-wrap:wrap; }
+  .quick-chip { background:var(--panel); border:1px solid var(--line); color:var(--text); padding:7px 12px; border-radius:999px; font-size:12.5px; cursor:pointer; font-family:inherit; display:flex; align-items:center; gap:6px; }
+  .quick-chip:hover { border-color:var(--gold); }
+  .quick-chip .pin-dot { color:var(--gold); }
 
   .toolbar { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:16px; }
   .search { flex:1 1 240px; padding:11px 14px; border:1px solid var(--line); border-radius:var(--radius); background:var(--panel); color:var(--text); font-size:14.5px; font-family:inherit; }
@@ -67,12 +94,16 @@
   details.cat[open] summary::after { transform:rotate(90deg); }
   .cat-body { padding:4px 18px 16px; display:grid; grid-template-columns:repeat(auto-fill, minmax(320px,1fr)); gap:10px; }
 
-  .card { background:var(--panel-raised); border:1px solid var(--line); border-radius:var(--radius); padding:16px 18px; display:flex; flex-direction:column; }
-  .card h3 { margin:0 0 5px; font-size:14.5px; font-weight:600; }
+  .card { background:var(--panel-raised); border:1px solid var(--line); border-radius:var(--radius); padding:16px 18px; display:flex; flex-direction:column; position:relative; }
+  .card h3 { margin:0 26px 5px 0; font-size:14.5px; font-weight:600; }
+  .pin-btn { position:absolute; top:14px; right:14px; background:none; border:none; cursor:pointer; font-size:15px; color:var(--text-soft); padding:2px; line-height:1; }
+  .pin-btn.pinned { color:var(--gold); }
   .subject { color:var(--text-soft); font-size:13px; margin:0 0 8px; }
   .subject b { color:var(--text); font-weight:500; }
   .body-text { white-space:pre-wrap; font-size:13.5px; line-height:1.6; max-height:0; overflow:hidden; transition:max-height .25s ease; }
   .card.open .body-text { max-height:900px; margin-bottom:10px; }
+  .fill-tag { color:var(--gold); font-weight:600; }
+  .fill-tag.empty { color:var(--danger); text-decoration:underline dotted; text-decoration-color:var(--danger); }
   .card-actions { display:flex; gap:8px; flex-wrap:wrap; margin-top:auto; padding-top:8px; }
 
   .toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--panel-raised); border:1px solid var(--gold); color:var(--text); padding:11px 20px; border-radius:var(--radius); font-size:13.5px; opacity:0; pointer-events:none; transition:opacity .2s,transform .2s; z-index:40; max-width:90vw; text-align:center; }
@@ -85,6 +116,7 @@
     .jump-select { flex:1 1 100%; }
     .cat-body { grid-template-columns:1fr; }
     .channel-tab { margin-right:16px; font-size:14px; }
+    .context-head .hint { display:none; }
   }
 </style>
 </head>
@@ -114,9 +146,54 @@
   </header>
 
   <div class="wrap">
+
+    <div class="context-panel" id="contextPanel">
+      <div class="context-head" id="contextHead">
+        <span class="caret">▸</span>
+        <span class="title">Guest details — Smart Fill</span>
+        <span class="badge" id="contextBadge">0 filled</span>
+        <span class="hint">Fill once, every template personalizes on Copy</span>
+      </div>
+      <div class="context-body">
+        <div class="context-grid">
+          <div class="context-field"><label for="ctxGuestName">Guest Name</label><input type="text" id="ctxGuestName" data-key="guestName"></div>
+          <div class="context-field"><label for="ctxRoomType">Room Type</label><input type="text" id="ctxRoomType" data-key="roomType"></div>
+          <div class="context-field"><label for="ctxCheckIn">Check-in Date</label><input type="text" id="ctxCheckIn" data-key="checkIn"></div>
+          <div class="context-field"><label for="ctxCheckOut">Check-out Date</label><input type="text" id="ctxCheckOut" data-key="checkOut"></div>
+          <div class="context-field"><label for="ctxConfirmation">Confirmation No.</label><input type="text" id="ctxConfirmation" data-key="confirmation"></div>
+          <div class="context-field"><label for="ctxTime">Time</label><input type="text" id="ctxTime" data-key="time"></div>
+        </div>
+        <button class="context-more-toggle" id="moreToggle">+ More fields</button>
+        <div class="context-more" id="moreFields">
+          <div class="context-grid">
+            <div class="context-field"><label for="ctxRate">Rate</label><input type="text" id="ctxRate" data-key="rate"></div>
+            <div class="context-field"><label for="ctxOccasion">Occasion</label><input type="text" id="ctxOccasion" data-key="occasion"></div>
+            <div class="context-field"><label for="ctxIssue">Issue</label><input type="text" id="ctxIssue" data-key="issue"></div>
+            <div class="context-field"><label for="ctxAction">Action Taken</label><input type="text" id="ctxAction" data-key="actionTaken"></div>
+            <div class="context-field"><label for="ctxContact">Extension / Email</label><input type="text" id="ctxContact" data-key="contact"></div>
+            <div class="context-field"><label for="ctxLocation">Pick-up Location</label><input type="text" id="ctxLocation" data-key="location"></div>
+            <div class="context-field"><label for="ctxVehicle">Vehicle Type</label><input type="text" id="ctxVehicle" data-key="vehicle"></div>
+            <div class="context-field"><label for="ctxTopic">Topic</label><input type="text" id="ctxTopic" data-key="topic"></div>
+          </div>
+        </div>
+        <div class="context-actions">
+          <button class="btn btn-ghost" id="clearContextBtn">Clear all</button>
+        </div>
+      </div>
+    </div>
+
     <div class="channel-tabs">
       <button class="channel-tab active" data-ch="email"><span class="dot"></span>Email</button>
       <button class="channel-tab" data-ch="whatsapp"><span class="dot"></span>WhatsApp</button>
+    </div>
+
+    <div class="quick-strip" id="pinnedStrip" style="display:none;">
+      <div class="strip-label">Pinned</div>
+      <div class="chip-row" id="pinnedChips"></div>
+    </div>
+    <div class="quick-strip" id="recentStrip" style="display:none;">
+      <div class="strip-label">Recently used</div>
+      <div class="chip-row" id="recentChips"></div>
     </div>
 
     <div class="toolbar">
@@ -142,6 +219,7 @@ const CONFIG = { password: 'GuestRelations2026!' };
 
 let TEMPLATES = [];
 let activeChannel = 'email';
+let ctx = {};
 
 const el = id => document.getElementById(id);
 const esc = s => (s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -159,6 +237,7 @@ applyTheme(localStorage.getItem('gr-lib-theme') || 'dark');
 
 function showToast(msg) { const t = el('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3200); }
 
+/* ---------- Login ---------- */
 function tryLogin() {
   const p = el('loginPass').value;
   if (p !== CONFIG.password) { el('loginError').textContent = 'Incorrect password.'; return; }
@@ -194,6 +273,93 @@ async function loadTemplates() {
   }
 }
 
+/* ---------- Smart Fill context ---------- */
+function loadContext() {
+  try { ctx = JSON.parse(sessionStorage.getItem('gr-lib-ctx') || '{}'); } catch (e) { ctx = {}; }
+  document.querySelectorAll('.context-field input').forEach(inp => {
+    const k = inp.dataset.key;
+    if (ctx[k]) inp.value = ctx[k];
+  });
+  updateContextBadge();
+}
+function saveContext() { sessionStorage.setItem('gr-lib-ctx', JSON.stringify(ctx)); }
+function updateContextBadge() {
+  const filled = Object.values(ctx).filter(v => v && v.trim()).length;
+  el('contextBadge').textContent = filled + ' filled';
+}
+document.querySelectorAll('.context-field input').forEach(inp => {
+  inp.addEventListener('input', () => {
+    ctx[inp.dataset.key] = inp.value;
+    saveContext();
+    updateContextBadge();
+    render();
+  });
+});
+el('contextHead').addEventListener('click', () => el('contextPanel').classList.toggle('open'));
+el('moreToggle').addEventListener('click', (e) => {
+  e.stopPropagation();
+  const show = el('moreFields').classList.toggle('show');
+  el('moreToggle').textContent = show ? '− Fewer fields' : '+ More fields';
+});
+el('clearContextBtn').addEventListener('click', (e) => {
+  e.stopPropagation();
+  ctx = {};
+  document.querySelectorAll('.context-field input').forEach(inp => inp.value = '');
+  saveContext(); updateContextBadge(); render();
+});
+
+/* Maps placeholder text (lowercased, punctuation-insensitive) to a ctx key */
+const PLACEHOLDER_MAP = {
+  'guest name': 'guestName', 'room type': 'roomType',
+  'date': 'checkIn', 'check-in date': 'checkIn', 'checkin date': 'checkIn',
+  'check-out date': 'checkOut', 'checkout date': 'checkOut',
+  'confirmation no': 'confirmation', 'confirmation number': 'confirmation',
+  'time': 'time', 'rate': 'rate', 'rate additional amount': 'rate',
+  'occasion': 'occasion', 'issue': 'issue', 'action taken': 'actionTaken',
+  'extension email': 'contact', 'extension/email': 'contact',
+  'location': 'location', 'vehicle type': 'vehicle', 'topic': 'topic',
+  'answer details': 'topic', 'answer/details': 'topic'
+};
+function placeholderKey(inner) {
+  const norm = inner.toLowerCase().replace(/[.,/]/g, ' ').replace(/\s+/g, ' ').trim();
+  return PLACEHOLDER_MAP[norm] || null;
+}
+
+/* Returns HTML with [placeholders] replaced/highlighted for on-screen preview */
+function fillForDisplay(text) {
+  return esc(text).replace(/\[([^\]]+)\]/g, (m, inner) => {
+    const key = placeholderKey(inner);
+    const val = key ? ctx[key] : null;
+    if (val && val.trim()) return `<span class="fill-tag">${esc(val)}</span>`;
+    return `<span class="fill-tag empty">${m}</span>`;
+  });
+}
+/* Returns plain text with [placeholders] substituted where a value exists, left as-is otherwise */
+function fillForCopy(text) {
+  return text.replace(/\[([^\]]+)\]/g, (m, inner) => {
+    const key = placeholderKey(inner);
+    const val = key ? ctx[key] : null;
+    return (val && val.trim()) ? val : m;
+  });
+}
+
+/* ---------- Pinned / Recently used (per-browser, localStorage) ---------- */
+function getPinned() { try { return JSON.parse(localStorage.getItem('gr-lib-pinned') || '[]'); } catch (e) { return []; } }
+function setPinned(arr) { localStorage.setItem('gr-lib-pinned', JSON.stringify(arr)); }
+function togglePin(id) {
+  let pinned = getPinned();
+  pinned = pinned.includes(id) ? pinned.filter(x => x !== id) : [id, ...pinned];
+  setPinned(pinned);
+  render();
+}
+function getRecent() { try { return JSON.parse(localStorage.getItem('gr-lib-recent') || '[]'); } catch (e) { return []; } }
+function pushRecent(id) {
+  let recent = getRecent().filter(x => x !== id);
+  recent.unshift(id);
+  recent = recent.slice(0, 6);
+  localStorage.setItem('gr-lib-recent', JSON.stringify(recent));
+}
+
 function channelTemplates() { return TEMPLATES.filter(t => t.channel === activeChannel); }
 function categories() {
   const set = [];
@@ -210,7 +376,33 @@ document.querySelectorAll('.channel-tab').forEach(tab => {
   });
 });
 
+function copyTemplate(t) {
+  const filledBody = fillForCopy(t.body);
+  const filledSubject = t.subject ? fillForCopy(t.subject) : '';
+  const text = t.channel === 'email' ? `Subject: ${filledSubject}\n\n${filledBody}` : filledBody;
+  navigator.clipboard.writeText(text).then(() => showToast('Copied to clipboard')).catch(() => showToast('Could not copy — select manually'));
+  pushRecent(t.id);
+  render();
+}
+
+function renderStrips() {
+  const pinned = getPinned().map(id => TEMPLATES.find(t => t.id === id)).filter(t => t && t.channel === activeChannel);
+  const recent = getRecent().map(id => TEMPLATES.find(t => t.id === id)).filter(t => t && t.channel === activeChannel);
+
+  el('pinnedStrip').style.display = pinned.length ? 'block' : 'none';
+  el('pinnedChips').innerHTML = pinned.map(t => `<button class="quick-chip" data-copy="${t.id}"><span class="pin-dot">★</span>${esc(t.title)}</button>`).join('');
+
+  el('recentStrip').style.display = recent.length ? 'block' : 'none';
+  el('recentChips').innerHTML = recent.map(t => `<button class="quick-chip" data-copy="${t.id}">${esc(t.title)}</button>`).join('');
+
+  document.querySelectorAll('.quick-chip').forEach(b => b.addEventListener('click', () => {
+    const t = TEMPLATES.find(x => x.id === b.dataset.copy);
+    if (t) copyTemplate(t);
+  }));
+}
+
 function render() {
+  renderStrips();
   const cats = categories();
   el('jumpSelect').innerHTML = '<option value="">Jump to category…</option>' + cats.map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join('');
 
@@ -219,6 +411,7 @@ function render() {
   const grouped = {};
   filtered.forEach(t => (grouped[t.category] = grouped[t.category]||[]).push(t));
   const groupCats = cats.filter(c => grouped[c]);
+  const pinnedIds = getPinned();
 
   el('emptyState').style.display = filtered.length ? 'none' : 'block';
   const openAttr = q ? ' open' : '';
@@ -228,9 +421,10 @@ function render() {
       <div class="cat-body">
         ${grouped[cat].map(t => `
           <div class="card" data-id="${t.id}">
+            <button class="pin-btn${pinnedIds.includes(t.id) ? ' pinned' : ''}" data-pin="${t.id}" title="Pin">${pinnedIds.includes(t.id) ? '★' : '☆'}</button>
             <h3>${esc(t.title)}</h3>
-            ${t.channel === 'email' ? `<p class="subject"><b>Subject:</b> ${esc(t.subject)}</p>` : ''}
-            <div class="body-text">${esc(t.body)}</div>
+            ${t.channel === 'email' ? `<p class="subject"><b>Subject:</b> ${fillForDisplay(t.subject)}</p>` : ''}
+            <div class="body-text">${fillForDisplay(t.body)}</div>
             <div class="card-actions">
               <button class="btn btn-ghost toggle-btn" data-id="${t.id}">Preview</button>
               <button class="btn btn-gold copy-btn" data-id="${t.id}">Copy</button>
@@ -245,9 +439,9 @@ function render() {
   }));
   el('list').querySelectorAll('.copy-btn').forEach(b => b.addEventListener('click', () => {
     const t = TEMPLATES.find(x => x.id === b.dataset.id);
-    const text = t.channel === 'email' ? `Subject: ${t.subject}\n\n${t.body}` : t.body;
-    navigator.clipboard.writeText(text).then(() => showToast('Copied to clipboard')).catch(() => showToast('Could not copy — select manually'));
+    copyTemplate(t);
   }));
+  el('list').querySelectorAll('.pin-btn').forEach(b => b.addEventListener('click', () => togglePin(b.dataset.pin)));
 }
 
 el('jumpSelect').addEventListener('change', () => {
@@ -258,6 +452,8 @@ el('jumpSelect').addEventListener('change', () => {
 el('expandAllBtn').addEventListener('click', () => document.querySelectorAll('.cat').forEach(d => d.setAttribute('open','')));
 el('collapseAllBtn').addEventListener('click', () => document.querySelectorAll('.cat').forEach(d => d.removeAttribute('open')));
 el('search').addEventListener('input', render);
+
+loadContext();
 </script>
 </body>
 </html>
