@@ -32,19 +32,24 @@
   .login-btn:hover { filter:brightness(1.08); }
 
   #app { display:none; }
-  header.top { display:flex; align-items:center; gap:14px; padding:16px 24px; background:var(--panel); border-bottom:1px solid var(--line); position:sticky; top:0; z-index:20; flex-wrap:wrap; }
+  header.top {
+    display:flex; align-items:center; gap:14px; padding:16px 24px;
+    background:linear-gradient(120deg, var(--panel) 0%, var(--panel-raised) 100%);
+    border-bottom:1px solid var(--line); box-shadow:0 1px 0 rgba(201,162,75,0.12);
+    position:sticky; top:0; z-index:20; flex-wrap:wrap;
+  }
   header.top img { width:34px; height:auto; }
   .brandblock { line-height:1.25; }
   .brandblock .name { font-size:14px; font-weight:600; }
   .brandblock .sub { font-size:12px; color:var(--text-soft); }
   .top-spacer { flex:1; }
-  .icon-btn { background:transparent; border:1px solid var(--line); color:var(--text-soft); padding:7px 12px; border-radius:var(--radius); font-size:13px; cursor:pointer; font-family:inherit; }
+  .icon-btn { background:transparent; border:1px solid var(--line); color:var(--text-soft); padding:7px 12px; border-radius:var(--radius); font-size:13px; cursor:pointer; font-family:inherit; transition:border-color .15s ease, color .15s ease; }
   .icon-btn:hover { border-color:var(--gold); color:var(--gold); }
 
   .wrap { max-width:1240px; margin:0 auto; padding:24px 24px 80px; }
 
   /* ---------- Smart Fill panel ---------- */
-  .context-panel { background:var(--panel); border:1px solid var(--line); border-radius:6px; margin-bottom:20px; overflow:hidden; }
+  .context-panel { background:var(--panel); border:1px solid var(--line); border-radius:6px; margin-bottom:12px; overflow:hidden; }
   .context-head { display:flex; align-items:center; gap:10px; padding:13px 16px; cursor:pointer; user-select:none; }
   .context-head .title { font-weight:600; font-size:14px; }
   .context-head .badge { font-size:11px; color:var(--gold); border:1px solid var(--gold); border-radius:999px; padding:2px 8px; }
@@ -61,6 +66,10 @@
   .context-more { display:none; }
   .context-more.show { display:block; }
   .context-actions { display:flex; gap:8px; margin-top:10px; }
+
+  .guest-chip { display:none; align-items:center; gap:8px; background:var(--panel); border:1px solid var(--gold); border-radius:999px; padding:7px 14px; margin-bottom:20px; font-size:12.5px; color:var(--text); width:fit-content; }
+  .guest-chip.show { display:flex; }
+  .guest-chip .dot { width:6px; height:6px; border-radius:50%; background:var(--gold); flex-shrink:0; }
 
   .channel-tabs { display:flex; gap:8px; margin-bottom:20px; border-bottom:1px solid var(--line); }
   .channel-tab { background:transparent; border:none; padding:12px 4px; margin-right:22px; font-size:15px; font-weight:600; color:var(--text-soft); cursor:pointer; border-bottom:2px solid transparent; font-family:inherit; }
@@ -81,20 +90,31 @@
   .search { flex:1 1 240px; padding:11px 14px; border:1px solid var(--line); border-radius:var(--radius); background:var(--panel); color:var(--text); font-size:14.5px; font-family:inherit; }
   .search:focus { outline:none; border-color:var(--gold); }
   .jump-select { padding:11px 12px; border:1px solid var(--line); border-radius:var(--radius); background:var(--panel); color:var(--text); font-size:14px; font-family:inherit; min-width:200px; }
-  .btn { border:none; padding:8px 14px; border-radius:var(--radius); font-size:13px; cursor:pointer; font-weight:600; font-family:inherit; }
+  .btn { border:none; padding:8px 14px; border-radius:var(--radius); font-size:13px; cursor:pointer; font-weight:600; font-family:inherit; transition:filter .15s ease, opacity .15s ease; }
   .btn-gold { background:var(--gold); color:#141311; }
+  .btn-wa { background:var(--wa); color:#08240F; }
   .btn-ghost { background:transparent; color:var(--text-soft); border:1px solid var(--line); }
+  .btn:hover:not(:disabled) { filter:brightness(1.08); }
+  .btn:disabled { opacity:.4; cursor:not-allowed; }
   .row-actions { display:flex; gap:8px; margin-bottom:22px; flex-wrap:wrap; }
 
   details.cat { border:1px solid var(--line); border-radius:6px; margin-bottom:10px; background:var(--panel); overflow:hidden; }
-  details.cat summary { list-style:none; cursor:pointer; padding:14px 18px; display:flex; align-items:center; justify-content:space-between; font-weight:600; font-size:15px; }
+  details.cat summary { list-style:none; cursor:pointer; padding:14px 18px; display:flex; align-items:center; gap:10px; justify-content:space-between; font-weight:600; font-size:15px; }
   details.cat summary::-webkit-details-marker { display:none; }
+  .cat-title-group { display:flex; align-items:center; gap:10px; }
+  .cat-icon { width:18px; height:18px; flex-shrink:0; opacity:0.9; }
   details.cat summary .count { color:var(--text-soft); font-weight:400; font-size:12.5px; }
   details.cat summary::after { content:'▸'; color:var(--gold); font-size:12px; transition:transform .18s ease; margin-left:10px; }
   details.cat[open] summary::after { transform:rotate(90deg); }
   .cat-body { padding:4px 18px 16px; display:grid; grid-template-columns:repeat(auto-fill, minmax(320px,1fr)); gap:10px; }
 
-  .card { background:var(--panel-raised); border:1px solid var(--line); border-radius:var(--radius); padding:16px 18px; display:flex; flex-direction:column; position:relative; }
+  .card {
+    background:var(--panel-raised); border:1px solid var(--line); border-left:3px solid var(--cat-color, var(--line));
+    border-radius:var(--radius); padding:16px 18px; display:flex; flex-direction:column; position:relative;
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .card:hover { transform:translateY(-2px); box-shadow:0 8px 20px rgba(0,0,0,0.28); }
+  [data-theme="light"] .card:hover { box-shadow:0 8px 20px rgba(30,25,10,0.12); }
   .card h3 { margin:0 26px 5px 0; font-size:14.5px; font-weight:600; }
   .pin-btn { position:absolute; top:14px; right:14px; background:none; border:none; cursor:pointer; font-size:15px; color:var(--text-soft); padding:2px; line-height:1; }
   .pin-btn.pinned { color:var(--gold); }
@@ -152,11 +172,13 @@
         <span class="caret">▸</span>
         <span class="title">Guest details — Smart Fill</span>
         <span class="badge" id="contextBadge">0 filled</span>
-        <span class="hint">Fill once, every template personalizes on Copy</span>
+        <span class="hint">Fill once — templates personalize, and WhatsApp/Email open pre-written</span>
       </div>
       <div class="context-body">
         <div class="context-grid">
           <div class="context-field"><label for="ctxGuestName">Guest Name</label><input type="text" id="ctxGuestName" data-key="guestName"></div>
+          <div class="context-field"><label for="ctxPhone">Guest Phone (with country code)</label><input type="text" id="ctxPhone" data-key="guestPhone" placeholder="e.g. 971501234567"></div>
+          <div class="context-field"><label for="ctxEmail">Guest Email</label><input type="text" id="ctxEmail" data-key="guestEmail"></div>
           <div class="context-field"><label for="ctxRoomType">Room Type</label><input type="text" id="ctxRoomType" data-key="roomType"></div>
           <div class="context-field"><label for="ctxCheckIn">Check-in Date</label><input type="text" id="ctxCheckIn" data-key="checkIn"></div>
           <div class="context-field"><label for="ctxCheckOut">Check-out Date</label><input type="text" id="ctxCheckOut" data-key="checkOut"></div>
@@ -181,6 +203,8 @@
         </div>
       </div>
     </div>
+
+    <div class="guest-chip" id="guestChip"><span class="dot"></span><span id="guestChipText"></span></div>
 
     <div class="channel-tabs">
       <button class="channel-tab active" data-ch="email"><span class="dot"></span>Email</button>
@@ -281,17 +305,27 @@ function loadContext() {
     if (ctx[k]) inp.value = ctx[k];
   });
   updateContextBadge();
+  updateGuestChip();
 }
 function saveContext() { sessionStorage.setItem('gr-lib-ctx', JSON.stringify(ctx)); }
 function updateContextBadge() {
   const filled = Object.values(ctx).filter(v => v && v.trim()).length;
   el('contextBadge').textContent = filled + ' filled';
 }
+function updateGuestChip() {
+  if (!ctx.guestName || !ctx.guestName.trim()) { el('guestChip').classList.remove('show'); return; }
+  const parts = [ctx.guestName];
+  if (ctx.roomType) parts.push(ctx.roomType);
+  if (ctx.checkIn || ctx.checkOut) parts.push(`${ctx.checkIn||'?'} – ${ctx.checkOut||'?'}`);
+  el('guestChipText').textContent = 'Prepping for: ' + parts.join(' · ');
+  el('guestChip').classList.add('show');
+}
 document.querySelectorAll('.context-field input').forEach(inp => {
   inp.addEventListener('input', () => {
     ctx[inp.dataset.key] = inp.value;
     saveContext();
     updateContextBadge();
+    updateGuestChip();
     render();
   });
 });
@@ -305,7 +339,7 @@ el('clearContextBtn').addEventListener('click', (e) => {
   e.stopPropagation();
   ctx = {};
   document.querySelectorAll('.context-field input').forEach(inp => inp.value = '');
-  saveContext(); updateContextBadge(); render();
+  saveContext(); updateContextBadge(); updateGuestChip(); render();
 });
 
 /* Maps placeholder text (lowercased, punctuation-insensitive) to a ctx key */
@@ -360,6 +394,32 @@ function pushRecent(id) {
   localStorage.setItem('gr-lib-recent', JSON.stringify(recent));
 }
 
+/* ---------- Category color + icon ---------- */
+const CAT_PALETTE = ['#C9A24B', '#3FBF6F', '#6E8FBF', '#BF6E8F', '#BF8F3F', '#7FBF6E'];
+function catColor(cat) {
+  let h = 0; for (let i = 0; i < cat.length; i++) h = (h * 31 + cat.charCodeAt(i)) >>> 0;
+  return CAT_PALETTE[h % CAT_PALETTE.length];
+}
+const ICONS = {
+  calendar: '<svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>',
+  door: '<svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="3" width="14" height="18" rx="1"/><circle cx="15" cy="12" r="1"/></svg>',
+  star: '<svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l2.6 5.9L21 9.6l-4.8 4.2L17.6 21 12 17.6 6.4 21l1.4-7.2L3 9.6l6.4-.7z"/></svg>',
+  shield: '<svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/></svg>',
+  tag: '<svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 12l-8 8-9-9V4h7z"/><circle cx="7.5" cy="7.5" r="1.2"/></svg>',
+  suitcase: '<svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M9 8V5a2 2 0 012-2h2a2 2 0 012 2v3"/></svg>',
+  message: '<svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12a8 8 0 11-3.4-6.5L21 4l-1.2 4.3A7.9 7.9 0 0121 12z"/></svg>'
+};
+function catIcon(cat) {
+  const c = cat.toLowerCase();
+  if (c.includes('vip') || c.includes('special')) return ICONS.star;
+  if (c.includes('recovery') || c.includes('complaint')) return ICONS.shield;
+  if (c.includes('reservation') || c.includes('confirmation')) return ICONS.calendar;
+  if (c.includes('check-in') || c.includes('welcome')) return ICONS.door;
+  if (c.includes('check-out') || c.includes('post-stay')) return ICONS.suitcase;
+  if (c.includes('upsell') || c.includes('upgrade')) return ICONS.tag;
+  return ICONS.message;
+}
+
 function channelTemplates() { return TEMPLATES.filter(t => t.channel === activeChannel); }
 function categories() {
   const set = [];
@@ -383,6 +443,22 @@ function copyTemplate(t) {
   navigator.clipboard.writeText(text).then(() => showToast('Copied to clipboard')).catch(() => showToast('Could not copy — select manually'));
   pushRecent(t.id);
   render();
+}
+
+function openWhatsApp(t) {
+  const phone = (ctx.guestPhone || '').replace(/[^0-9]/g, '');
+  if (!phone) { showToast('Add the guest\u2019s phone number in Guest details first'); return; }
+  const text = fillForCopy(t.body);
+  window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`, '_blank');
+  pushRecent(t.id);
+}
+function openEmail(t) {
+  const email = (ctx.guestEmail || '').trim();
+  if (!email) { showToast('Add the guest\u2019s email in Guest details first'); return; }
+  const subject = fillForCopy(t.subject || '');
+  const body = fillForCopy(t.body);
+  window.location.href = `mailto:${encodeURIComponent(email)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  pushRecent(t.id);
 }
 
 function renderStrips() {
@@ -412,34 +488,50 @@ function render() {
   filtered.forEach(t => (grouped[t.category] = grouped[t.category]||[]).push(t));
   const groupCats = cats.filter(c => grouped[c]);
   const pinnedIds = getPinned();
+  const hasPhone = !!(ctx.guestPhone && ctx.guestPhone.trim());
+  const hasEmail = !!(ctx.guestEmail && ctx.guestEmail.trim());
 
   el('emptyState').style.display = filtered.length ? 'none' : 'block';
   const openAttr = q ? ' open' : '';
-  el('list').innerHTML = groupCats.map(cat => `
+  el('list').innerHTML = groupCats.map(cat => {
+    const color = catColor(cat);
+    return `
     <details class="cat" data-cat="${esc(cat)}"${openAttr}>
-      <summary>${esc(cat)} <span class="count">${grouped[cat].length} template${grouped[cat].length===1?'':'s'}</span></summary>
+      <summary>
+        <span class="cat-title-group" style="color:${color}">${catIcon(cat)}<span style="color:var(--text)">${esc(cat)}</span></span>
+        <span class="count">${grouped[cat].length} template${grouped[cat].length===1?'':'s'}</span>
+      </summary>
       <div class="cat-body">
         ${grouped[cat].map(t => `
-          <div class="card" data-id="${t.id}">
+          <div class="card" data-id="${t.id}" style="--cat-color:${color}">
             <button class="pin-btn${pinnedIds.includes(t.id) ? ' pinned' : ''}" data-pin="${t.id}" title="Pin">${pinnedIds.includes(t.id) ? '★' : '☆'}</button>
             <h3>${esc(t.title)}</h3>
             ${t.channel === 'email' ? `<p class="subject"><b>Subject:</b> ${fillForDisplay(t.subject)}</p>` : ''}
             <div class="body-text">${fillForDisplay(t.body)}</div>
             <div class="card-actions">
               <button class="btn btn-ghost toggle-btn" data-id="${t.id}">Preview</button>
-              <button class="btn btn-gold copy-btn" data-id="${t.id}">Copy</button>
+              <button class="btn btn-ghost copy-btn" data-id="${t.id}">Copy</button>
+              ${t.channel === 'whatsapp'
+                ? `<button class="btn btn-wa send-wa-btn" data-id="${t.id}"${hasPhone?'':' disabled'}>Open in WhatsApp</button>`
+                : `<button class="btn btn-gold send-email-btn" data-id="${t.id}"${hasEmail?'':' disabled'}>Open in Email</button>`}
             </div>
           </div>`).join('')}
       </div>
-    </details>`).join('');
+    </details>`;
+  }).join('');
 
   el('list').querySelectorAll('.toggle-btn').forEach(b => b.addEventListener('click', () => {
     const card = b.closest('.card'); const open = card.classList.toggle('open');
     b.textContent = open ? 'Hide' : 'Preview';
   }));
   el('list').querySelectorAll('.copy-btn').forEach(b => b.addEventListener('click', () => {
-    const t = TEMPLATES.find(x => x.id === b.dataset.id);
-    copyTemplate(t);
+    copyTemplate(TEMPLATES.find(x => x.id === b.dataset.id));
+  }));
+  el('list').querySelectorAll('.send-wa-btn').forEach(b => b.addEventListener('click', () => {
+    openWhatsApp(TEMPLATES.find(x => x.id === b.dataset.id));
+  }));
+  el('list').querySelectorAll('.send-email-btn').forEach(b => b.addEventListener('click', () => {
+    openEmail(TEMPLATES.find(x => x.id === b.dataset.id));
   }));
   el('list').querySelectorAll('.pin-btn').forEach(b => b.addEventListener('click', () => togglePin(b.dataset.pin)));
 }
