@@ -3,58 +3,53 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Front Office Email Library — Rixos Bab Al Bahr</title>
+<title>Guest Relations Message Library — Rixos Bab Al Bahr</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0B0B0C;
-    --panel: #151517;
-    --panel-raised: #1C1C1F;
-    --line: #2B2B2E;
-    --gold: #C9A24B;
-    --text: #F1EFEA;
-    --text-soft: #A8A39A;
-    --danger: #D9776A;
-    --radius: 4px;
+    --bg: #0B0B0C; --panel: #151517; --panel-raised: #1C1C1F; --line: #2B2B2E;
+    --gold: #C9A24B; --text: #F1EFEA; --text-soft: #A8A39A; --danger: #D9776A;
+    --wa: #3FBF6F; --radius: 4px;
   }
   [data-theme="light"] {
-    --bg: #F6F4EF;
-    --panel: #FFFFFF;
-    --panel-raised: #FBFAF7;
-    --line: #E4DFD2;
-    --gold: #A9803F;
-    --text: #17160F;
-    --text-soft: #6B6455;
+    --bg: #F6F4EF; --panel: #FFFFFF; --panel-raised: #FBFAF7; --line: #E4DFD2;
+    --gold: #A9803F; --text: #17160F; --text-soft: #6B6455;
   }
   * { box-sizing: border-box; }
-  body { margin:0; background:var(--bg); color:var(--text); font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif; transition:background .2s ease,color .2s ease; }
+  body { margin:0; background:var(--bg); color:var(--text); font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif; }
 
-  /* ---------- Login gate ---------- */
   #loginScreen { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px; }
   .login-card { width:100%; max-width:360px; text-align:center; background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:40px 32px 32px; }
   .login-card img { width:96px; height:auto; margin-bottom:18px; opacity:0.95; }
-  .login-card h1 { font-size:17px; font-weight:600; margin:0 0 2px; letter-spacing:0.3px; }
+  .login-card h1 { font-size:17px; font-weight:600; margin:0 0 2px; }
   .login-card .sub { color:var(--text-soft); font-size:13px; margin:0 0 26px; }
   .login-field { text-align:left; margin-bottom:14px; }
   .login-field label { display:block; font-size:11.5px; color:var(--text-soft); margin-bottom:5px; text-transform:uppercase; letter-spacing:0.6px; }
   .login-field input { width:100%; padding:10px 12px; background:var(--panel-raised); border:1px solid var(--line); border-radius:var(--radius); color:var(--text); font-size:14.5px; font-family:inherit; }
   .login-field input:focus { outline:none; border-color:var(--gold); }
   .login-error { color:var(--danger); font-size:12.5px; min-height:16px; margin:2px 0 12px; text-align:left; }
-  .login-btn { width:100%; padding:11px; background:var(--gold); color:#141311; border:none; border-radius:var(--radius); font-size:14px; font-weight:600; cursor:pointer; letter-spacing:0.2px; }
+  .login-btn { width:100%; padding:11px; background:var(--gold); color:#141311; border:none; border-radius:var(--radius); font-size:14px; font-weight:600; cursor:pointer; }
   .login-btn:hover { filter:brightness(1.08); }
 
-  /* ---------- App shell ---------- */
   #app { display:none; }
   header.top { display:flex; align-items:center; gap:14px; padding:16px 24px; background:var(--panel); border-bottom:1px solid var(--line); position:sticky; top:0; z-index:20; flex-wrap:wrap; }
   header.top img { width:34px; height:auto; }
   .brandblock { line-height:1.25; }
-  .brandblock .name { font-size:14px; font-weight:600; letter-spacing:0.2px; }
+  .brandblock .name { font-size:14px; font-weight:600; }
   .brandblock .sub { font-size:12px; color:var(--text-soft); }
   .top-spacer { flex:1; }
   .icon-btn { background:transparent; border:1px solid var(--line); color:var(--text-soft); padding:7px 12px; border-radius:var(--radius); font-size:13px; cursor:pointer; font-family:inherit; }
   .icon-btn:hover { border-color:var(--gold); color:var(--gold); }
 
-  .wrap { max-width:1080px; margin:0 auto; padding:28px 24px 80px; }
+  .wrap { max-width:1240px; margin:0 auto; padding:24px 24px 80px; }
+
+  .channel-tabs { display:flex; gap:8px; margin-bottom:20px; border-bottom:1px solid var(--line); }
+  .channel-tab { background:transparent; border:none; padding:12px 4px; margin-right:22px; font-size:15px; font-weight:600; color:var(--text-soft); cursor:pointer; border-bottom:2px solid transparent; font-family:inherit; }
+  .channel-tab.active { color:var(--text); border-bottom-color:var(--gold); }
+  .channel-tab .dot { display:inline-block; width:7px; height:7px; border-radius:50%; margin-right:7px; vertical-align:middle; }
+  .channel-tab[data-ch="email"] .dot { background:var(--gold); }
+  .channel-tab[data-ch="whatsapp"] .dot { background:var(--wa); }
+
   .toolbar { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:16px; }
   .search { flex:1 1 240px; padding:11px 14px; border:1px solid var(--line); border-radius:var(--radius); background:var(--panel); color:var(--text); font-size:14.5px; font-family:inherit; }
   .search:focus { outline:none; border-color:var(--gold); }
@@ -70,21 +65,27 @@
   details.cat summary .count { color:var(--text-soft); font-weight:400; font-size:12.5px; }
   details.cat summary::after { content:'▸'; color:var(--gold); font-size:12px; transition:transform .18s ease; margin-left:10px; }
   details.cat[open] summary::after { transform:rotate(90deg); }
-  .cat-body { padding:0 18px 16px; }
+  .cat-body { padding:4px 18px 16px; display:grid; grid-template-columns:repeat(auto-fill, minmax(320px,1fr)); gap:10px; }
 
-  .card { background:var(--panel-raised); border:1px solid var(--line); border-radius:var(--radius); padding:16px 18px; margin-bottom:10px; }
+  .card { background:var(--panel-raised); border:1px solid var(--line); border-radius:var(--radius); padding:16px 18px; display:flex; flex-direction:column; }
   .card h3 { margin:0 0 5px; font-size:14.5px; font-weight:600; }
   .subject { color:var(--text-soft); font-size:13px; margin:0 0 8px; }
   .subject b { color:var(--text); font-weight:500; }
-  .body-text { white-space:pre-wrap; font-size:13.5px; line-height:1.6; max-height:0; overflow:hidden; transition:max-height .25s ease; color:var(--text); }
+  .body-text { white-space:pre-wrap; font-size:13.5px; line-height:1.6; max-height:0; overflow:hidden; transition:max-height .25s ease; }
   .card.open .body-text { max-height:900px; margin-bottom:10px; }
-  .card-actions { display:flex; gap:8px; flex-wrap:wrap; }
+  .card-actions { display:flex; gap:8px; flex-wrap:wrap; margin-top:auto; padding-top:8px; }
 
   .toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--panel-raised); border:1px solid var(--gold); color:var(--text); padding:11px 20px; border-radius:var(--radius); font-size:13.5px; opacity:0; pointer-events:none; transition:opacity .2s,transform .2s; z-index:40; max-width:90vw; text-align:center; }
   .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
   .empty, .loading { text-align:center; padding:60px 20px; color:var(--text-soft); }
 
-  @media (max-width:560px) { .wrap{padding:20px 16px 60px;} header.top{padding:14px 16px;} .jump-select{flex:1 1 100%;} }
+  @media (max-width:560px) {
+    .wrap { padding:18px 16px 60px; }
+    header.top { padding:14px 16px; }
+    .jump-select { flex:1 1 100%; }
+    .cat-body { grid-template-columns:1fr; }
+    .channel-tab { margin-right:16px; font-size:14px; }
+  }
 </style>
 </head>
 <body>
@@ -92,10 +93,9 @@
 <div id="loginScreen">
   <div class="login-card">
     <img src="https://rbabroomguide.github.io/assets/rixos-logo.png" alt="Rixos Bab Al Bahr">
-    <h1>Front Office Email Library</h1>
+    <h1>Guest Relations Message Library</h1>
     <p class="sub">Rixos Bab Al Bahr — sign in to continue</p>
-    <div class="login-field"><label for="loginUser">Username</label><input type="text" id="loginUser" autocomplete="username"></div>
-    <div class="login-field"><label for="loginPass">Password</label><input type="password" id="loginPass" autocomplete="current-password"></div>
+    <div class="login-field"><label for="loginPass">Team password</label><input type="password" id="loginPass" autocomplete="current-password"></div>
     <div class="login-error" id="loginError"></div>
     <button class="login-btn" id="loginBtn">Sign in</button>
   </div>
@@ -105,7 +105,7 @@
   <header class="top">
     <img src="https://rbabroomguide.github.io/assets/rixos-logo.png" alt="Rixos Bab Al Bahr">
     <div class="brandblock">
-      <div class="name">Front Office Email Library</div>
+      <div class="name">Guest Relations Message Library</div>
       <div class="sub">Rixos Bab Al Bahr</div>
     </div>
     <div class="top-spacer"></div>
@@ -114,6 +114,11 @@
   </header>
 
   <div class="wrap">
+    <div class="channel-tabs">
+      <button class="channel-tab active" data-ch="email"><span class="dot"></span>Email</button>
+      <button class="channel-tab" data-ch="whatsapp"><span class="dot"></span>WhatsApp</button>
+    </div>
+
     <div class="toolbar">
       <input class="search" id="search" type="text" placeholder="Search templates…">
       <select class="jump-select" id="jumpSelect"><option value="">Jump to category…</option></select>
@@ -130,16 +135,13 @@
 <div class="toast" id="toast"></div>
 
 <script>
-/* Single shared team login. Ask Claude to update templates.json in the
-   repo whenever the library needs a change — this page is read-only. */
-const CONFIG = {
-  accounts: [
-    { username: 'frontoffice', password: 'RixosFO2026!' }
-  ]
-};
+/* Everyone signs in with the one team password to view. To add, edit, or
+   remove templates, message Claude — changes get pushed to templates.json
+   directly, no in-page editing in this version. */
+const CONFIG = { password: 'GuestRelations2026!' };
 
 let TEMPLATES = [];
-let signedIn = false;
+let activeChannel = 'email';
 
 const el = id => document.getElementById(id);
 const esc = s => (s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -147,33 +149,30 @@ const esc = s => (s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'
 function applyTheme(t) {
   if (t === 'light') { document.documentElement.setAttribute('data-theme','light'); el('themeToggle').textContent = 'Dark'; }
   else { document.documentElement.removeAttribute('data-theme'); el('themeToggle').textContent = 'Light'; }
-  localStorage.setItem('rbab-email-lib-theme', t);
+  localStorage.setItem('gr-lib-theme', t);
 }
 el('themeToggle').addEventListener('click', () => {
   const isLight = document.documentElement.getAttribute('data-theme') === 'light';
   applyTheme(isLight ? 'dark' : 'light');
 });
-applyTheme(localStorage.getItem('rbab-email-lib-theme') || 'dark');
+applyTheme(localStorage.getItem('gr-lib-theme') || 'dark');
+
+function showToast(msg) { const t = el('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3200); }
 
 function tryLogin() {
-  const u = el('loginUser').value.trim();
   const p = el('loginPass').value;
-  const match = CONFIG.accounts.find(a => a.username === u && a.password === p);
-  if (!match) { el('loginError').textContent = 'Incorrect username or password.'; return; }
-  signedIn = true;
-  sessionStorage.setItem('rbab-email-lib-signedin', '1');
+  if (p !== CONFIG.password) { el('loginError').textContent = 'Incorrect password.'; return; }
+  sessionStorage.setItem('gr-lib-signedin', '1');
   enterApp();
 }
 el('loginBtn').addEventListener('click', tryLogin);
-el('loginPass').addEventListener('keydown', e => { if (e.key === 'Enter') tryLogin(); });
-el('loginUser').addEventListener('keydown', e => { if (e.key === 'Enter') el('loginPass').focus(); });
+el('loginPass').addEventListener('keydown', e => { if (e.key==='Enter') tryLogin(); });
 
 el('signOutBtn').addEventListener('click', () => {
-  signedIn = false;
-  sessionStorage.removeItem('rbab-email-lib-signedin');
+  sessionStorage.removeItem('gr-lib-signedin');
   el('app').style.display = 'none';
   el('loginScreen').style.display = 'flex';
-  el('loginUser').value = ''; el('loginPass').value = ''; el('loginError').textContent = '';
+  el('loginPass').value=''; el('loginError').textContent='';
 });
 
 function enterApp() {
@@ -182,7 +181,7 @@ function enterApp() {
   if (!TEMPLATES.length) loadTemplates(); else render();
 }
 
-if (sessionStorage.getItem('rbab-email-lib-signedin') === '1') { signedIn = true; enterApp(); }
+if (sessionStorage.getItem('gr-lib-signedin') === '1') enterApp();
 
 async function loadTemplates() {
   try {
@@ -195,20 +194,28 @@ async function loadTemplates() {
   }
 }
 
-function showToast(msg) { const t = el('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3200); }
-
+function channelTemplates() { return TEMPLATES.filter(t => t.channel === activeChannel); }
 function categories() {
   const set = [];
-  TEMPLATES.forEach(t => { if (!set.includes(t.category)) set.push(t.category); });
+  channelTemplates().forEach(t => { if (!set.includes(t.category)) set.push(t.category); });
   return set;
 }
+
+document.querySelectorAll('.channel-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    activeChannel = tab.dataset.ch;
+    document.querySelectorAll('.channel-tab').forEach(t => t.classList.toggle('active', t === tab));
+    el('search').value = '';
+    render();
+  });
+});
 
 function render() {
   const cats = categories();
   el('jumpSelect').innerHTML = '<option value="">Jump to category…</option>' + cats.map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join('');
 
   const q = el('search').value.trim().toLowerCase();
-  const filtered = TEMPLATES.filter(t => !q || (t.title+' '+t.subject+' '+t.body+' '+t.category).toLowerCase().includes(q));
+  const filtered = channelTemplates().filter(t => !q || (t.title+' '+t.subject+' '+t.body+' '+t.category).toLowerCase().includes(q));
   const grouped = {};
   filtered.forEach(t => (grouped[t.category] = grouped[t.category]||[]).push(t));
   const groupCats = cats.filter(c => grouped[c]);
@@ -222,7 +229,7 @@ function render() {
         ${grouped[cat].map(t => `
           <div class="card" data-id="${t.id}">
             <h3>${esc(t.title)}</h3>
-            <p class="subject"><b>Subject:</b> ${esc(t.subject)}</p>
+            ${t.channel === 'email' ? `<p class="subject"><b>Subject:</b> ${esc(t.subject)}</p>` : ''}
             <div class="body-text">${esc(t.body)}</div>
             <div class="card-actions">
               <button class="btn btn-ghost toggle-btn" data-id="${t.id}">Preview</button>
@@ -238,13 +245,13 @@ function render() {
   }));
   el('list').querySelectorAll('.copy-btn').forEach(b => b.addEventListener('click', () => {
     const t = TEMPLATES.find(x => x.id === b.dataset.id);
-    navigator.clipboard.writeText(`Subject: ${t.subject}\n\n${t.body}`).then(() => showToast('Copied to clipboard')).catch(() => showToast('Could not copy — select manually'));
+    const text = t.channel === 'email' ? `Subject: ${t.subject}\n\n${t.body}` : t.body;
+    navigator.clipboard.writeText(text).then(() => showToast('Copied to clipboard')).catch(() => showToast('Could not copy — select manually'));
   }));
 }
 
 el('jumpSelect').addEventListener('change', () => {
-  const cat = el('jumpSelect').value;
-  if (!cat) return;
+  const cat = el('jumpSelect').value; if (!cat) return;
   const target = document.querySelector(`.cat[data-cat="${CSS.escape(cat)}"]`);
   if (target) { target.setAttribute('open',''); target.scrollIntoView({ behavior:'smooth', block:'start' }); }
 });
